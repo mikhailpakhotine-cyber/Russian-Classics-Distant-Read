@@ -4,9 +4,8 @@ let analysisData = null;
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Load analysis data
-        const response = await fetch('data/analysis_results.json');
-        analysisData = await response.json();
+        // Load analysis data (from embedded data.js to avoid CORS issues)
+        analysisData = ANALYSIS_DATA;
 
         // Initialize all components
         initializeTabs();
