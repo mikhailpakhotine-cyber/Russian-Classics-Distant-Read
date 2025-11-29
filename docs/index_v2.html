@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russian Classics: Distant Reading Analysis</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- D3 Cloud for word clouds -->
+    <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+        }
+
+        .card {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .topic-word {
+            display: inline-block;
+            margin: 3px;
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .wordcloud-container {
+            min-height: 400px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        #comparison-selector {
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark sticky-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                📚 Russian Classics: Distant Reading Analysis
+            </span>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        <!-- Text Selector -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Select Text to Analyze</h5>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="textSelect" id="dostoyevsky" value="0" checked>
+                    <label class="btn btn-outline-primary" for="dostoyevsky">Dostoyevsky</label>
+
+                    <input type="radio" class="btn-check" name="textSelect" id="chernyshevsky" value="1">
+                    <label class="btn btn-outline-primary" for="chernyshevsky">Chernyshevsky</label>
+
+                    <input type="radio" class="btn-check" name="textSelect" id="wells" value="2">
+                    <label class="btn btn-outline-primary" for="wells">Wells</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Mode Toggle -->
+        <div class="card mb-4" id="comparison-selector">
+            <div class="card-body">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="comparisonMode">
+                    <label class="form-check-label" for="comparisonMode">
+                        <strong>Enable Comparison Mode</strong>
+                    </label>
+                </div>
+                <div id="comparisonControls" style="display:none;">
+                    <label class="form-label">Compare:</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select class="form-select" id="compareText1">
+                                <option value="0">Dostoyevsky</option>
+                                <option value="1">Chernyshevsky</option>
+                                <option value="2">Wells</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-select" id="compareText2">
+                                <option value="0">Dostoyevsky</option>
+                                <option value="1" selected>Chernyshevsky</option>
+                                <option value="2">Wells</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Text View -->
+        <div id="singleView">
+            <!-- Metadata Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📊 Metadata</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="metadataContent"></div>
+                </div>
+            </div>
+
+            <!-- Sentiment Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">😊 Sentiment Analysis (VADER)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="sentimentContent"></div>
+                    <div id="sentimentChart"></div>
+                </div>
+            </div>
+
+            <!-- Style & Diversity Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">✍️ Style & Textual Diversity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="styleContent"></div>
+                </div>
+            </div>
+
+            <!-- Word Cloud Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">☁️ Word Cloud (Top 50 Words)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="wordcloud-container" id="wordcloudContainer"></div>
+                </div>
+            </div>
+
+            <!-- Topics Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">🔍 Topics (LDA Modeling)</h5>
+                </div>
+                <div class="card-body" id="topicsContent"></div>
+            </div>
+        </div>
+
+        <!-- Comparison View -->
+        <div id="comparisonView" style="display:none;">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">⚖️ Side-by-Side Comparison</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6" id="compareColumn1"></div>
+                        <div class="col-md-6" id="compareColumn2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Charts -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">📈 Visual Comparison</h5>
+                </div>
+                <div class="card-body">
+                    <div id="comparisonCharts"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="enhanced_app.js"></script>
+</body>
+</html>
