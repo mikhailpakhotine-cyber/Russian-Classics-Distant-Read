@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russian Classics: Distant Reading Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="data.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Distant Reading Analysis</h1>
+        <h2>Russian Classics & Utopian Literature</h2>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-button active" data-tab="overview">Overview</button>
+        <button class="tab-button" data-tab="dostoyevsky">Dostoyevsky</button>
+        <button class="tab-button" data-tab="chernyshevsky">Chernyshevsky</button>
+        <button class="tab-button" data-tab="wells">Wells</button>
+        <button class="tab-button" data-tab="comparison">Compare All</button>
+    </nav>
+
+    <main>
+        <!-- Overview Tab -->
+        <section id="overview" class="tab-content active">
+            <h2>Project Overview</h2>
+            <p class="intro">This distant reading analysis examines three influential works exploring themes of society, individuality, and utopian ideals:</p>
+
+            <div class="text-grid">
+                <div class="text-card">
+                    <h3>Dostoyevsky's Notes from the Underground</h3>
+                    <p>A psychological novella exploring consciousness, free will, and alienation in modern society.</p>
+                </div>
+                <div class="text-card">
+                    <h3>Chernyshevsky's What Is To Be Done?</h3>
+                    <p>A radical novel depicting rational egoism and socialist ideals through the lives of revolutionary characters.</p>
+                </div>
+                <div class="text-card">
+                    <h3>Wells' A Modern Utopia</h3>
+                    <p>A philosophical discourse presenting a utopian society based on scientific rationalism and global governance.</p>
+                </div>
+            </div>
+
+            <div class="insights">
+                <h3>Key Insights</h3>
+                <div id="insights-list"></div>
+            </div>
+
+            <div class="methodology">
+                <h3>Analysis Methods</h3>
+                <ul>
+                    <li><strong>VADER Sentiment Analysis:</strong> Document-level positive/negative sentiment scoring</li>
+                    <li><strong>Vocabulary Richness:</strong> Type-Token Ratio and lexical diversity metrics</li>
+                    <li><strong>Dialogue vs. Narrative:</strong> Ratio analysis of quoted dialogue to narrative text</li>
+                    <li><strong>Word Frequency Analysis:</strong> Most common words (stopwords excluded)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Dostoyevsky Tab -->
+        <section id="dostoyevsky" class="tab-content">
+            <h2>Dostoyevsky's Notes from the Underground</h2>
+            <div class="analysis-container">
+                <div class="metrics-grid">
+                    <div class="metric-card" id="dostoyevsky-sentiment"></div>
+                    <div class="metric-card" id="dostoyevsky-vocabulary"></div>
+                    <div class="metric-card" id="dostoyevsky-dialogue"></div>
+                </div>
+
+                <div class="wordcloud-section">
+                    <h3>Word Cloud</h3>
+                    <img src="images/dostoyevsky_wordcloud.png" alt="Dostoyevsky Word Cloud" class="wordcloud">
+                    <div class="top-words" id="dostoyevsky-words"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chernyshevsky Tab -->
+        <section id="chernyshevsky" class="tab-content">
+            <h2>Chernyshevsky's What Is To Be Done?</h2>
+            <div class="analysis-container">
+                <div class="metrics-grid">
+                    <div class="metric-card" id="chernyshevsky-sentiment"></div>
+                    <div class="metric-card" id="chernyshevsky-vocabulary"></div>
+                    <div class="metric-card" id="chernyshevsky-dialogue"></div>
+                </div>
+
+                <div class="wordcloud-section">
+                    <h3>Word Cloud</h3>
+                    <img src="images/chernyshevsky_wordcloud.png" alt="Chernyshevsky Word Cloud" class="wordcloud">
+                    <div class="top-words" id="chernyshevsky-words"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wells Tab -->
+        <section id="wells" class="tab-content">
+            <h2>Wells' A Modern Utopia</h2>
+            <div class="analysis-container">
+                <div class="metrics-grid">
+                    <div class="metric-card" id="wells-sentiment"></div>
+                    <div class="metric-card" id="wells-vocabulary"></div>
+                    <div class="metric-card" id="wells-dialogue"></div>
+                </div>
+
+                <div class="wordcloud-section">
+                    <h3>Word Cloud</h3>
+                    <img src="images/wells_wordcloud.png" alt="Wells Word Cloud" class="wordcloud">
+                    <div class="top-words" id="wells-words"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Tab -->
+        <section id="comparison" class="tab-content">
+            <h2>Comparative Analysis</h2>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3>Sentiment Comparison</h3>
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Vocabulary Richness</h3>
+                    <canvas id="vocabularyChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Dialogue vs. Narrative</h3>
+                    <canvas id="dialogueChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Text Statistics</h3>
+                    <canvas id="statsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <h3>Side-by-Side Metrics</h3>
+                <table id="comparisonTable"></table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Analysis conducted using VADER Sentiment Analysis, NLTK, and Python WordCloud</p>
+        <p>Data generated: <span id="timestamp"></span></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
